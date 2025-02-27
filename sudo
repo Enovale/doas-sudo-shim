@@ -4,7 +4,7 @@ set -u
 help() {
 	cat <<-EOF
 	Usage:
-	  sudo (-i | -s) [-n] [-k] [-u <user>] [<command> [--] [<args>...]]
+	  sudo (-i | -k | -s) [-n] [-u <user>] [<command> [--] [<args>...]]
 	  sudo [-insk] [-u <user>] <command> [--] [<args>...]
 	  sudo [-h]
 
