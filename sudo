@@ -4,8 +4,8 @@ set -u
 help() {
 	cat <<-EOF
 	Usage:
-	  sudo (-i | -k | -s) [-n] [-u <user>] [<command> [--] [<args>...]]
-	  sudo [-insk] [-u <user>] <command> [--] [<args>...]
+	  sudo (-i | -k | -v | -s) [-n] [-u <user>] [<command> [--] [<args>...]]
+	  sudo [-inskv] [-u <user>] <command> [--] [<args>...]
 	  sudo [-h]
 
 	Execute a command as another user using doas(1).
@@ -24,7 +24,7 @@ if [ $# -eq 0 ]; then
 fi
 
 # Note: "+" disables optional option parameters
-opts=$(getopt -n sudo -o +insu:kh -l login,non-interactive,shell,user:,reset-timestamp,help -- "$@") || {
+opts=$(getopt -n sudo -o +insu:kvh -l login,non-interactive,shell,user:,reset-timestamp,validate,help -- "$@") || {
 	help >&2
 	exit 1
 }
@@ -34,6 +34,7 @@ flag_i=
 flag_n=
 flag_s=
 flag_k=
+flag_v=
 user=
 while [ $# -gt 0 ]; do
 	case "$1" in
@@ -42,6 +43,7 @@ while [ $# -gt 0 ]; do
 		-s | --shell) flag_s='-s';;
 		-u | --user) user=${2#\#}; shift;;
 		-k | --reset-timestamp) flag_k='-L';;
+		-v | --validate) flag_v='-v'; shift;;
 		-h | --help) help; exit 0;;
 		--) shift; break;;
 	esac
