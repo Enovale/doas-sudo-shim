@@ -4,9 +4,9 @@ set -u
 help() {
 	cat <<-EOF
 	Usage:
-	  sudo (-i | -k | -v | -s) [-n] [-u <user>] [<command> [--] [<args>...]]
-	  sudo [-inskv] [-u <user>] <command> [--] [<args>...]
-	  sudo [-h]
+	 sudo (-i | -k | -v | -s) [-n] [-u <user>] [<command> [--] [<args>...]]
+	 sudo [-inskv] [-u <user>] <command> [--] [<args>...]
+	 sudo [-h]
 
 	Execute a command as another user using doas(1).
 
@@ -34,7 +34,6 @@ flag_i=
 flag_n=
 flag_s=
 flag_k=
-flag_v=
 user=
 while [ $# -gt 0 ]; do
 	case "$1" in
@@ -43,7 +42,7 @@ while [ $# -gt 0 ]; do
 		-s | --shell) flag_s='-s';;
 		-u | --user) user=${2#\#}; shift;;
 		-k | --reset-timestamp) flag_k='-L';;
-		-v | --validate) flag_v='-v'; shift;;
+		-v | --validate) flag_s="true";;
 		-h | --help) help; exit 0;;
 		--) shift; break;;
 	esac
@@ -85,7 +84,7 @@ elif [ "$flag_s" ]; then
 	_doas -- "${SHELL:-$(user_shell)}" -c '"$0" "$@"' "$@"
 elif [ "$flag_k" ]; then
 	doas $flag_k ${user:+-u "$user"}
-	doas $flag_n ${user:+-u "$user"} "$@"
+	_doas -- "$@"
 else
 	_doas -- "$@"
 fi
