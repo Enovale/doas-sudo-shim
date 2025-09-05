@@ -5,7 +5,7 @@
 
 This is a shim for the `sudo` command that utilizes https://www.mankier.com/1/doas[doas].
 It supports only a subset of the `sudo` options (both short and long variants) that have an equivalent in `doas`, plus option `-i` (`--login`).
-This is a fork from https://github.com/fclivaz42/doas-sudo-shim which adds support for the '-v' argument.
+This is a fork from https://github.com/jirutka/doas-sudo-shim which adds support for the '-v' argument.
 
 == Requirements
 
