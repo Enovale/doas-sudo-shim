@@ -21,15 +21,16 @@ sudo - execute a command as another user using doas
 
 == SYNOPSIS
 
-*sudo* (-i | -s) [-n] [-u <__user__>] [<__command__> [--] [<__args__>...]] +
-*sudo* [-ins] [-u <__user__>] <__command__> [--] [<__args__>...] +
+*sudo* (-i | -s) [-k] [-n] [-u <__user__>] [<__command__> [--] [<__args__>...]] +
+*sudo* [-ikns] [-u <__user__>] <__command__> [--] [<__args__>...] +
+*sudo* -k +
 *sudo* [-h]
 
 
 == DESCRIPTION
 
 This is not the original {sudo}, but a shim for the `sudo` command that utilizes {doas}.
-It supports only a subset of the {sudo} options (both short and long variants) that have an equivalent in {doas}, plus option *-i* (*--login*).
+It supports only a subset of the {sudo} options (both short and long variants) that have an equivalent in {doas}, plus options *-i* (*--login*) and *-k* (*--reset-timestamp*).
 
 See {doas} and {sudo} for more information.
 
@@ -42,6 +43,14 @@ This means that login-specific resource files such as `.profile`, `.bash_profile
 If a _command_ is specified, it is passed to the shell for execution via the shell`'s *-c* option.
 If no _command_ is specified, an interactive shell is executed.
 This shim attempts to change to that __user__`'s home directory right after running the shell.
+
+*-k*, *--reset-timestamp*::
+Invalidate the user's cached credentials by executing {doas} with the *-L* option.
+When used without a command, it clears the cached credentials and exits.
++
+*WARNING:* When used with a command, this option is only approximated.
+Unlike {sudo}, OpenDoas cannot ignore the cached credential for a single invocation while also preventing the timestamp from being refreshed.
+This shim calls `doas -L` before and after the command instead, which is not atomic and may leave or expose a refreshed timestamp if interrupted or used concurrently!
 
 *-n*, *--non-interactive*::
 Non interactive mode, fail if the matching rule doesn`'t have the `nopass` option.
